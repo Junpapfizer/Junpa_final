@@ -18,15 +18,15 @@ app.use(body());
 app.use(express.static(path.resolve(__dirname, '..', 'build')));
 
 const db = mysql.createConnection({
-    host: '172.18.224.1',
+    host: '192.168.80.1',
     user: 'poom',
     password: '1234',
     database: 'testing'
-});
-// show data
+});//SELECT timestamp, id, firstname, lastname, email, laptop_Name FROM users, labtop LIMIT 1;
+// show data //SELECT timestamp, id, firstname, lastname, email, laptop_Name FROM users, labtop;
 app.get('/data', function(req,res){
     console.log("Hello in /data ");
-    let sql = 'SELECT * FROM users;';
+    let sql = 'SELECT * FROM users left join labtop on labtop.laptop_id = users.lula;';
     db.query(sql, (err, result)=>{
         if(err) throw err;
         console.log(result);
@@ -34,6 +34,18 @@ app.get('/data', function(req,res){
     });
     console.log("after query");
 });
+//show labtop
+app.get('/labtop', function(req,res){
+    console.log("Hello in /labtop ");
+    let sql = 'SELECT * FROM labtop;';
+    db.query(sql, (err, result)=>{
+        if(err) throw err;
+        console.log(result);
+        res.json(result);
+    });
+    console.log("after query");
+});
+
 
 //delete
 app.put('/delete', function(req, res) {
@@ -57,9 +69,12 @@ app.put('/data', function(req, res) {
 app.post('/data', function(req, res){
     console.log(req.body);
     let data = {
+      
         id:req.body.idkey,
         firstname:req.body.firstname,
-        lastname:req.body.lastname
+        lastname:req.body.lastname,
+        email:req.body.email, // add emild
+        lula:req.body.lula // ต้องใส่ 
     };
     let sql = 'INSERT INTO users SET ?';
     db.query(sql, data, (err, result)=>{

@@ -10,9 +10,11 @@ export default class Showdata extends Component{
         super();
         this.state ={
             list:[],
+            timestamp:"",
             idkey:"",
             firstname:"",
-            lastname:""
+            lastname:"",
+            laptop:""
         }
         this.handleChang = this.handleChang.bind(this);
         this.handleClicked = this.handleClicked.bind(this);
@@ -34,7 +36,14 @@ export default class Showdata extends Component{
     onDelete=(user)=>{
         let url = `https://localhost:3000/delete`;
         let data = {
-            idkey:user.id
+            timestamp:user.timestamp,
+            idkey:user.id,
+            firstname:user.firstname,
+            lastname:user.lastname,
+            email:user.email,
+            laptop:user.laptop
+            
+
         }
         axios.put(url,data)
         setTimeout(()=>{this.componentDidMount()},1)
@@ -54,9 +63,11 @@ export default class Showdata extends Component{
     call=(user)=>{
         this.openModal();
         this.setState({
+            timestamp:user.timestamp,
             idkey:user.id,
             firstname:user.firstname,
-            lastname:user.lastname
+            lastname:user.lastname,
+            laptop:user.laptop
         })
     }
     handleChang = (e) => {
@@ -65,9 +76,11 @@ export default class Showdata extends Component{
         });
         let url = `https://localhost:3000/data`;
         let data = {
+            timestamp:this.state.timestamp,
             idkey:this.state.idkey,
             firstname:this.state.firstname,
-            lastname:this.state.lastname
+            lastname:this.state.lastname,
+            laptop:this.state.laptop
         }
         axios.put(url,data)
     }
@@ -75,15 +88,19 @@ export default class Showdata extends Component{
     handleClicked(){
         let url = `https://localhost:3000/data`;
         let data = {
+            timestamp:this.timestamp,
             idkey:this.state.idkey,
             firstname:this.state.firstname,
-            lastname:this.state.lastname
+            lastname:this.state.lastname,
+            laptop:this.state.laptop
         }
         axios.put(url,data)
         this.setState({
+            timestamp:"",
             idkey:"",
             firstname:"",
-            lastname:""
+            lastname:"",
+            laptop:""
         });
 	this.closeModal();
         setTimeout(()=>{this.componentDidMount()},1)
@@ -99,20 +116,26 @@ export default class Showdata extends Component{
                     <table className="table table-dark">
                         <thead>
                             <tr>
+                            <th>TimeStamp</th>
                             <th>ID</th>
                             <th>First Name</th>
                             <th>Last Name</th>
+                            <th>E-mail</th>
+                            <th>LAPTOP</th>
                             </tr>
                         </thead>
                         <tbody>
                                 {list.map((user) =>{
                                     return(
                                         <tr>
+                                            <td>{user.timestamp}</td>
                                             <td>{user.id}</td>
                                             <td>{user.firstname}</td>
                                             <td>{user.lastname}</td>
+                                            <td>{user.email}</td>
+                                            <td>{user.laptop_Name}</td>
                                             <td><button type="button" class="btn btn-warning" onClick={()=>this.call(user)}>Edit</button></td>
-                                            <td><button type="button" class="btn btn-danger"  onClick={()=>this.onDelete(user)}>Delet</button></td>
+                                            <td><button type="button" class="btn btn-danger"  onClick={()=>this.onDelete(user)}>Delete</button></td>
                                             <div className="box">
                                                 <Modal visible={this.state.visible}
                                                        width="1200"
@@ -121,6 +144,9 @@ export default class Showdata extends Component{
                                                        onClickAway={() => this.closeModal()}
                                                 >
                                                     <form className="container" id='form'>
+                                                        <div className="form-group">
+                                                            <h3><label htmlFor="id">TimeStamp: {this.state.timestamp}<br/></label></h3>
+                                                        </div>
                                                         <div className="form-group">
                                                             <h3><label htmlFor="id">ID: {this.state.idkey}<br/></label></h3>
                                                         </div>
